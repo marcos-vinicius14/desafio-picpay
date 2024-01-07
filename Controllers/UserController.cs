@@ -12,8 +12,8 @@ namespace Picpay_01.Controllers;
 //[Route("v1")]
 public class UserController : ControllerBase
 {
-    private readonly UserService _userService;
     private readonly IMemoryCache _cache;
+    private readonly UserService _userService;
 
     public UserController(
         UserService userService,
@@ -22,8 +22,8 @@ public class UserController : ControllerBase
         _userService = userService;
         _cache = cache;
     }
-    
-    
+
+
     [HttpPost("v1/users")]
     public async Task<IActionResult> CreateUserAsync(
         [FromBody] UserViewModel model)
@@ -46,7 +46,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet("v1/users")]
+    [HttpGet("v1/users/{skip:int?}/{take:int?}")]
     public async Task<IActionResult> FindAllUsersAsync([FromServices] DataContext context)
     {
         try

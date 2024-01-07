@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Picpay_01.Data;
 using Picpay_01.Models;
@@ -59,13 +60,24 @@ public class UserService
         return newUser;
         
     }
-    
-    public async Task<List<Users>>GetAllUsersAsync(DataContext context)
+
+    public async Task<List<Users>>GetAllUsersAsync(
+        [FromServices]DataContext context,
+        [FromQuery] int skip = 0,
+        [FromQuery] int take = 25)
     {
-        var allUsers = await 
-                context.
-                Users.AsNoTracking().
-                ToListAsync();
+        var count = await context
+            .Transactions
+            .AsNoTracking()
+            .CountAsync();
+        
+        var allUsers = await context 
+            .Users
+            .AsNoTracking()
+            .OrderBy(x => x.Id)
+            .Skip(skip * take)
+            .Take(take)
+            .ToListAsync();
 
         if (allUsers == null)
             throw new Exception("Não foi possível buscar os usuários.");
@@ -86,5 +98,4 @@ public class UserService
 
         return userId;
     }
-
 }
