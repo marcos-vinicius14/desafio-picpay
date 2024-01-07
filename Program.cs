@@ -45,6 +45,7 @@ void ConfigureMVC(WebApplicationBuilder builder)
 
 void ConfigureServices(WebApplicationBuilder builder)
 {
+     builder.Services.AddMemoryCache();
      var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
      builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
 
